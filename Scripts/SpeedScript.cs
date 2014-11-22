@@ -5,7 +5,8 @@ public class SpeedScript : MonoBehaviour {
 	float scale;
 
 	void OnTriggerEnter2D(Collider2D player) {
-		
+
+		print ("On m'est rentré dedans");
 		InputController script = (InputController) player.GetComponent("InputController");
 
 		scale = script.GetScale();
@@ -13,7 +14,7 @@ public class SpeedScript : MonoBehaviour {
 			script.setScale(scale + 0.02f);
 		}
 
-		Destroy (this.gameObject);
+		Destroy (gameObject);
 	}
 
 	// Use this for initialization

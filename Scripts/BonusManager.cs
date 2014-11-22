@@ -28,10 +28,12 @@ public class BonusManager : MonoBehaviour {
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 	};
 
+	float delayMax = 2f;
+
 	[SerializeField]
 	GameObject SpeedBonus;
 
-	int delay;
+	float delay;
 
 	enum bonusType {
 		Speed,
@@ -44,9 +46,8 @@ public class BonusManager : MonoBehaviour {
 	void generateBonus() {
 		int i = Random.Range (1, 21);
 		int j = Random.Range (1, 21);
-
 		if (tileMap[i,j] != 0 && tileMap[i,j] != 2) {
-			if (Random.Range(0,20) == 7) {
+			if (Random.Range(0,2) == 0) {
 				GameObject.Instantiate(SpeedBonus, transform.position + new Vector3(i, j, 1), transform.rotation);
 			}
 		}
@@ -60,10 +61,10 @@ public class BonusManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (delay == 10) {
+		if (delay > delayMax) {
 			generateBonus();
-			delay = 0;
+			delay = 0.0f;
 		}
-		delay++;
+		delay+=Time.deltaTime;
 	}
 }

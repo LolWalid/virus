@@ -4,7 +4,7 @@ using XInputDotNetPure;
 
 public class Player : MonoBehaviour {
 	public float speed = 0.4f;
-	public PlayerIndex player;
+	private PlayerIndex player;
 	public float timespan = 0.5f;
 
 	IEnumerator Vibrate(PlayerIndex player, float speed, float timespan, float delay)

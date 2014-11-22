@@ -10,7 +10,6 @@ public class Physics : MonoBehaviour {
 		InputController script = (InputController) this.GetComponent("InputController");
 		Player player = (Player) this.GetComponent("Player");
 
-		print (collid.gameObject.tag);
 		if (collid.gameObject.tag == "Player") {
 			InputController script2 = (InputController) collid.GetComponent("InputController");
 			Player player2 = (Player) collid.GetComponent("Player");
@@ -22,7 +21,7 @@ public class Physics : MonoBehaviour {
 			Vector3 v2 = -1 * script2.GetSpeed();
 			collid.transform.position  += v2;
 			script2.SetSpeed(v2);
-			print(v2.ToString());
+
 			if ((player.IsInfected || player2.IsInfected) && coolDown < 0) {
 				player2.IsInfected = !player2.IsInfected;
 				player.IsInfected = !player.IsInfected;
