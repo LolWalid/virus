@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Physics : MonoBehaviour {
-	public float scale;
+	public float scale = 0.5f;
 
 	private float coolDown;
 
@@ -10,34 +10,35 @@ public class Physics : MonoBehaviour {
 
 		InputController script = (InputController) this.GetComponent("InputController");
 		Player player = (Player) this.GetComponent("Player");
-		InputController script2 = (InputController) collid.GetComponent("InputController");
-		Player player2 = (Player) collid.GetComponent("Player");
+
+		if (collid.gameObject.tag == "Player") {
+			InputController script2 = (InputController) collid.GetComponent("InputController");
+			Player player2 = (Player) collid.GetComponent("Player");
 
 
-		Vector3 v = -1 *  script.GetSpeed();
-		this.transform.position  += v * scale;
-		script.SetSpeed(v);
+			Vector3 v = -1 *  script.GetSpeed();
+			this.transform.position  += v * scale;
+			script.SetSpeed(v);
 
-		Vector3 v2 = -1 * script2.GetSpeed();
-		collid.transform.position  += v2 * scale;
-		script2.SetSpeed(v2);
+			Vector3 v2 = -1 * script2.GetSpeed();
+			collid.transform.position  += v2 * scale;
+			script2.SetSpeed(v2);
 
-		if ((player.IsInfected || player2.IsInfected) && coolDown < 0) {
-			player2.IsInfected = !player2.IsInfected;
-			player.IsInfected = !player.IsInfected;
+			if ((player.IsInfected || player2.IsInfected) && coolDown < 0) {
+				player2.IsInfected = !player2.IsInfected;
+				player.IsInfected = !player.IsInfected;
 
-			coolDown = 1f;
-			if (player.IsInfected)
-				player.vibrate(coolDown);
-			else
-				player2.vibrate (coolDown);
-
+				coolDown = 1f;
+				if (player.IsInfected)
+					player.vibrate(coolDown);
+				else
+					player2.vibrate (coolDown);
+			}
 		}
 	}
 
 	// Use this for initialization
 	void Start () {
-		scale = 0.5f;
 	}
 	
 	// Update is called once per frame

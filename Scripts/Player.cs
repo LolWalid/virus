@@ -44,6 +44,7 @@ public class Player : MonoBehaviour {
 	public void vibrate(float delay) {
 		StartCoroutine(Vibrate (player, speed, timespan,delay));
 	}
+	
 
 	// Use this for initialization
 	void Start () {

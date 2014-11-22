@@ -6,8 +6,11 @@ public class InputController : MonoBehaviour {
 	public float scale;
 	public float threshold;
 
+	private SpriteRenderer sr;
+	public Sprite haut;
+	public Sprite normal;
+
 	private int id;
-			
 	private string axisH;
 	private string axisV;
 
@@ -26,20 +29,28 @@ public class InputController : MonoBehaviour {
 		Player player = (Player) this.GetComponent("Player");
 		id = player.Id;
 		Speed=new Vector3(0,0,0);
-		scale = 0.05f;
+		scale = 0.15f;
 		threshold = 0.9f;
 		axisH = "Horizontal" + id;
 		axisV = "Vertical" + id;
+		sr = (SpriteRenderer) GetComponent("SpriteRenderer");
+		sr.sprite = normal;
 	}
 
 	// Update is called once per frame
 	void Update () {
+		if (Speed != new Vector3(0,1,0) * scale)
+			sr.sprite = normal;
+
 		if (Mathf.Abs(Input.GetAxis(axisH)) == 1 || Mathf.Abs(Input.GetAxis(axisV)) == 1)
 		{
 			if (Mathf.Abs(Input.GetAxis(axisH)) > Mathf.Abs(Input.GetAxis(axisV)))
 				Speed = new Vector3(Input.GetAxis(axisH),0,0)  * scale;
-			else
-				Speed = new Vector3(0,Input.GetAxis(axisV),0)  * scale;
+			else {
+				if (Input.GetAxis(axisV) > 0)
+					sr.sprite = haut;
+			Speed = new Vector3(0,Input.GetAxis(axisV),0)  * scale;
+			}
 		}
 		transform.position += Speed;
 	}
