@@ -5,7 +5,7 @@ public class InputController : MonoBehaviour
 {
 	private Vector3 Speed;
 	public float threshold;
-	private int id;
+	public int id;
 	private bool isInfected;
 	private string axisH;
 	private string axisV;
@@ -17,6 +17,7 @@ public class InputController : MonoBehaviour
 	private SpriteRenderer sr;
 	public Sprite back;
 	public Sprite normal;
+	private Player player; 
 	
 	
 	[SerializeField]
@@ -79,8 +80,7 @@ public class InputController : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		Player player = (Player)this.GetComponent ("Player");
-		isInfected = player.IsInfected;
+		player = (Player)this.GetComponent ("Player");
 		Speed = new Vector3 (0, 0, 0);
 		scale = 0.05f;
 		threshold = 0.9f;
@@ -91,6 +91,7 @@ public class InputController : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+		isInfected = player.IsInfected;
 		if (Speed != new Vector3(0,1,0) * scale)
 			sr.sprite = normal;
 		
@@ -99,7 +100,6 @@ public class InputController : MonoBehaviour
 		inputV = Input.GetAxis (axisV);
 		
 		if (isInfected) {
-			Debug.Log ("Infected : " + mode);
 			switch (mode) {
 			case Commands.FullInvert:
 				Debug.Log ("FullInvert");
