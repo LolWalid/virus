@@ -10,7 +10,8 @@ public class Player : MonoBehaviour {
 	IEnumerator Vibrate(PlayerIndex player, float speed, float timespan, float delay)
 	{
 		yield return new WaitForSeconds(delay);
-		Debug.Log ("vibrate!");
+		Debug.Log (id);
+		Debug.Log (player);
 		GamePad.SetVibration(player, speed, speed);
 		yield return new WaitForSeconds(timespan);
 		GamePad.SetVibration(player, 0, 0);
