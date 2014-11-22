@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(AudioSource))]
 public class WallScript : MonoBehaviour {
 	public float scale = 0.05f;
 	public GameObject sound;
+	static private GameObject realSound;
 
 	void OnTriggerEnter2D (Collider2D collid) {
 		if (collid.gameObject.tag == "Player") {
@@ -14,8 +14,12 @@ public class WallScript : MonoBehaviour {
 			collid.transform.position  += v2;
 
 			script2.SetSpeed(v2);
-			sound.audio.Play();
-
+			if (!realSound)
+				realSound = (GameObject) Instantiate (sound, new Vector3(0,0,0), transform.rotation);
+			realSound.audio.Play();
 		}
+	}
+	void start() {
+
 	}
 }

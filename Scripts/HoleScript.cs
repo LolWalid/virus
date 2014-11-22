@@ -7,6 +7,7 @@ public class HoleScript : MonoBehaviour {
 	void OnTriggerEnter2D (Collider2D collid) {
 		InputController script2 = (InputController) collid.GetComponent("InputController");
 		script2.scale = 0;
+		GameManager.playersAlive -= 1;
 		kill(collid.gameObject);
 	}
 

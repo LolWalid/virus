@@ -8,6 +8,9 @@ public class GameManager : MonoBehaviour {
 	public Sprite[] Player2 = new Sprite[2];
 	public Sprite[] Player3 = new Sprite[2];
 	public Sprite[] Player4 = new Sprite[2];
+
+	public static int playersAlive = 4;
+	bool textOn = true;
 	
 	[SerializeField]
 	GameObject playerModel;
@@ -58,11 +61,17 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 	
 	}
+
+	void OnGUI () {
+		if (textOn) {
+			GUI.Label (new Rect (Screen.width /2,Screen.height /2,Screen.width,Screen.height),"Press START !!");
+		}
+	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.Space))
-		{
+		if (Input.GetButtonDown ("Start")) {
+			textOn = false;	
 			init();
 			infect (0);
 		}
