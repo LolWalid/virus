@@ -3,7 +3,6 @@ using System.Collections;
 
 public class InputController : MonoBehaviour {
 	private Vector3 Speed;
-	public float scale;
 	public float threshold;
 
 	private SpriteRenderer sr;
@@ -13,6 +12,17 @@ public class InputController : MonoBehaviour {
 	private int id;
 	private string axisH;
 	private string axisV;
+
+	[SerializeField]
+	public float scale;
+	
+	public float GetScale() {
+		return scale;
+	}
+	
+	public void setScale(float new_scale) {
+		scale = new_scale;
+	}
 
 	public Vector3 GetSpeed() {
 		return Speed / scale;
@@ -29,7 +39,7 @@ public class InputController : MonoBehaviour {
 		Player player = (Player) this.GetComponent("Player");
 		id = player.Id;
 		Speed=new Vector3(0,0,0);
-		scale = 0.15f;
+		scale = 0.05f;
 		threshold = 0.9f;
 		axisH = "Horizontal" + id;
 		axisV = "Vertical" + id;
