@@ -23,14 +23,16 @@ public class Physics : MonoBehaviour {
 			script2.SetSpeed(v2);
 
 			if ((player.IsInfected || player2.IsInfected) && coolDown < 0) {
-				player2.IsInfected = !player2.IsInfected;
-				player.IsInfected = !player.IsInfected;
 
 				coolDown = 1f;
-				if (player.IsInfected)
-					player.vibrate(coolDown);
-				else
-					player2.vibrate (coolDown);
+				if (player.IsInfected){
+					player2.infect(coolDown);
+					player.unInfect();
+				}
+				else {
+					player.infect(coolDown);
+					player2.unInfect();
+				}
 			}
 		}
 	}

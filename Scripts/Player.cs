@@ -41,20 +41,25 @@ public class Player : MonoBehaviour {
 	}
 
 
-	public void vibrate(float delay) {
+	public void infect(float delay) {
+		player = (PlayerIndex) id - 1;
+		isInfected = true;
 		StartCoroutine(Vibrate (player, speed, timespan,delay));
+	}
+	public void unInfect() {
+		isInfected = false;
 	}
 	
 
 	// Use this for initialization
 	void Start () {
-		player = (PlayerIndex) id - 1;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (IsInfected) 
-			transform.localScale = new Vector3(1f,1f,0);
-
+		if (isInfected)
+			transform.localScale = new Vector3(0.8f,0.8f,1.0f);
+		else 
+			transform.localScale = new Vector3(0.5f,0.5f,1.0f);
 	}
 }
