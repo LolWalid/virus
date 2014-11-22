@@ -54,7 +54,6 @@ public class Player : MonoBehaviour {
 	void Update () {
 		if (IsInfected) 
 			transform.localScale = new Vector3(1f,1f,0);
-		else 
-			transform.localScale = new Vector3(0.5f,0.5f,0);
+
 	}
 }

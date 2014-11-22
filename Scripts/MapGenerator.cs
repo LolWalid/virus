@@ -3,11 +3,7 @@ using System.Collections;
 
 public class MapGenerator : MonoBehaviour {
 	
-	enum TileType {
-		Floor,
-		Wall,
-		Hole
-	};
+	public Sprite [] sprites;
 	
 	int[,] tileMap = new int[22,22] { 
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -44,6 +40,7 @@ public class MapGenerator : MonoBehaviour {
 	GameObject holeSprite;
 
 	void buildMap () {
+		GameObject item;
 		for (int i=0; i<22; i++) {
 			for (int j=0; j<22; j++) {
 				if (tileMap[i,j] == 0) {
@@ -51,7 +48,9 @@ public class MapGenerator : MonoBehaviour {
 				}
 
 				if (tileMap[i,j] == 1) {
-					GameObject.Instantiate(floorSprite, transform.position + new Vector3 (i, j, 1), transform.rotation);
+					item = GameObject.Instantiate(floorSprite, transform.position + new Vector3 (i, j, 1), transform.rotation) as GameObject;
+					SpriteRenderer sr = (SpriteRenderer) item.GetComponent("SpriteRenderer");
+					sr.sprite = sprites[Random.Range(0, sprites.Length)];
 				}
 
 				if (tileMap[i,j] == 2) {
