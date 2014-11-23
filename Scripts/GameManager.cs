@@ -18,7 +18,9 @@ public class GameManager : MonoBehaviour {
 	GameObject[] numbers = new GameObject[3];
 
 	public static int playersAlive = 0;
-	bool textStart = true;
+	public GameObject prefabStart;
+	private GameObject textStart;
+
 	bool textWin = false;
 	int winner = 0;
 
@@ -41,7 +43,7 @@ public class GameManager : MonoBehaviour {
 	}
 	IEnumerator firstInfect(){
 		yield return new WaitForSeconds (5);
-		firstInfect ();
+		infect();
 	}
 
 	IEnumerator init () {
@@ -51,9 +53,6 @@ public class GameManager : MonoBehaviour {
 		((BonusManager) this.GetComponent("BonusManager")).setInGame(true);
 
 		musicSound.audio.Play();
-		playersAlive = 4;
-		textStart = false;
-		textWin = false;
 
 		InputController script;
 		Player playerScript;
@@ -110,11 +109,12 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void OnGUI () {
-		if (textStart) {
-			GUI.Label (new Rect (Screen.width /2,Screen.height /2,Screen.width,Screen.height),"Press START !!");
-		}
+		Rect rectangle = new Rect (Screen.width / 2 - 150, Screen.height / 2 - 50, Screen.width, Screen.height);
 		if (textWin) {
-			GUI.Label (new Rect (Screen.width /2,Screen.height /2,Screen.width,Screen.height),"PLAYER "+ winner +" WINS !");
+			GUIStyle font = new GUIStyle();
+			font.fontSize = 40;
+			font.normal.textColor = Color.white;
+			GUI.Label (rectangle,"PLAYER "+ winner +" WINS !", font);
 			musicSound.audio.Stop();
 		}
 	}
@@ -122,6 +122,7 @@ public class GameManager : MonoBehaviour {
 
 	void Start () {
 		musicSound.audio.loop = true;
+		textStart = (GameObject) Instantiate (prefabStart, new Vector3(0,0,1), transform.rotation);
 	}
 
 	bool check() {
@@ -139,16 +140,19 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetButtonDown ("Start") && playersAlive <= 1) {
+			playersAlive = 4;
+			textWin = false;
+			Destroy(textStart.gameObject);
 			StartCoroutine (countdown());
 			StartCoroutine (init());
 			StartCoroutine (firstInfect ());
-			textStart = false;
 		}
 
-		if (playersAlive == 1) {
+		if (playersAlive == 1 && !textStart) {
+			textStart = (GameObject) Instantiate (prefabStart, new Vector3(0,0,1), transform.rotation);
 			for (int i=0; i<players.Length; i++) {
 				if (players[i] != null) {
-					winner = i;
+					winner = i + 1;
 					textWin = true;
 				}
 			}

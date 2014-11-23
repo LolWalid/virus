@@ -14,6 +14,7 @@ public class BonusManager : MonoBehaviour {
 	public static bool thereIsASafeZone;
 	public GameObject speedBonus;
 	public GameObject safeZone;
+	public GameObject catBonus;
 
 	public void setWorld(uint[,] value) {
 		world = value;
@@ -47,10 +48,15 @@ public class BonusManager : MonoBehaviour {
 	}
 
 	void generateBonus() {
-		int i = Random.Range (1, 20);
-		int j = Random.Range (1, 20);
-		if (world[i,j] == 1) {
-			GameObject.Instantiate(speedBonus, transform.position + new Vector3(i, j, 1), transform.rotation);
+		int i = Random.Range (1, 21);
+		int j = Random.Range (1, 21);
+		if (world[i,j] != 0 && world[i,j] != 2 && i != 8 && j != 12) {
+			if (Random.Range (41,43) == 42) {
+				GameObject.Instantiate(catBonus, transform.position + new Vector3(i,j,1), transform.rotation);
+			}
+			else {
+				GameObject.Instantiate(speedBonus, transform.position + new Vector3(i, j, 1), transform.rotation);
+			}
 		}
 	}
 
