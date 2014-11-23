@@ -92,13 +92,16 @@ public class InputController : MonoBehaviour
 	void Update ()
 	{
 		isInfected = player.IsInfected;
+
 		if (Speed != new Vector3(0,1,0) * scale)
 			sr.sprite = normal;
 		
-		mode = Commands.Normal;
+		mode = Commands.HtoV;
 		inputH = Input.GetAxis (axisH);
 		inputV = Input.GetAxis (axisV);
-		
+		coeffH = 1;
+		coeffV = 1;
+
 		if (isInfected) {
 			switch (mode) {
 			case Commands.FullInvert:
@@ -125,7 +128,7 @@ public class InputController : MonoBehaviour
 			case Commands.HtoV:
 				float temp = inputH;
 				inputH = inputV;
-				inputH = temp;
+				inputV = temp;
 				break;
 			case Commands.SwitchJoystick:
 				inputH = Input.GetAxis ("HorizontalAlternate" + id);

@@ -9,8 +9,12 @@ public class GameManager : MonoBehaviour {
 	public Sprite[] Player3 = new Sprite[2];
 	public Sprite[] Player4 = new Sprite[2];
 
-	public static int playersAlive = 4;
-	bool textOn = true;
+	public static int playersAlive = 0;
+	bool textStart = true;
+	bool textWin = false;
+	int winner = 0;
+
+	public GameObject musicSound;
 	
 	[SerializeField]
 	GameObject playerModel;
@@ -21,6 +25,11 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 
 	void init () {
+		musicSound.audio.Play();
+		playersAlive = 4;
+		textStart = false;
+		textWin = false;
+
 		InputController script;
 		Player playerScript;
 
@@ -58,22 +67,36 @@ public class GameManager : MonoBehaviour {
 
 	}
 
+	void OnGUI () {
+		if (textStart) {
+			GUI.Label (new Rect (Screen.width /2,Screen.height /2,Screen.width,Screen.height),"Press START !!");
+		}
+		if (textWin) {
+			GUI.Label (new Rect (Screen.width /2,Screen.height /2,Screen.width,Screen.height),"PLAYER "+ winner +" WINS !");
+			musicSound.audio.Stop();
+		}
+	}
+
+
 	void Start () {
+		musicSound.audio.loop = false;
 	
 	}
 
-	void OnGUI () {
-		if (textOn) {
-			GUI.Label (new Rect (Screen.width /2,Screen.height /2,Screen.width,Screen.height),"Press START !!");
-		}
-	}
-	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetButtonDown ("Start")) {
-			textOn = false;	
+		if (Input.GetButtonDown ("Start") && playersAlive <= 1) {
 			init();
 			infect (0);
+		}
+		
+		if (playersAlive == 1) {
+			for (int i=0; i<players.Length; i++) {
+				if (players[i] != null) {
+					winner = i;
+					textWin = true;
+				}
+			}
 		}
 	}
 }
