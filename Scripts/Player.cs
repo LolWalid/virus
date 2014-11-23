@@ -9,6 +9,9 @@ public class Player : MonoBehaviour {
 	public float time_max = 15.0f;
 	private float time = 0f;
 
+	public GameObject virusPrefab;
+	static private GameObject virusSound;
+
 	IEnumerator Vibrate(PlayerIndex player, float speed, float timespan, float delay)
 	{
 		yield return new WaitForSeconds(delay);
@@ -58,6 +61,8 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		if (!virusSound)
+			virusSound = (GameObject) Instantiate (virusPrefab, new Vector3(0,0,0), transform.rotation);
 	}
 	
 	// Update is called once per frame
@@ -74,6 +79,7 @@ public class Player : MonoBehaviour {
 		}
 		if (time > time_max)
 		{
+			virusSound.audio.Play();
 			GameManager.kill (id);
 		}
 	}

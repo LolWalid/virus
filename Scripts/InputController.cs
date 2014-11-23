@@ -82,7 +82,7 @@ public class InputController : MonoBehaviour
 	{
 		player = (Player)this.GetComponent ("Player");
 		Speed = new Vector3 (0, 0, 0);
-		scale = 0.05f;
+		scale = 0.03f;
 		threshold = 0.9f;
 		sr = (SpriteRenderer) GetComponent("SpriteRenderer");
 		sr.sprite = normal;

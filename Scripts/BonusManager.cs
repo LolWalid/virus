@@ -3,67 +3,78 @@ using System.Collections;
 
 public class BonusManager : MonoBehaviour {
 	
-	int[,] tileMap = new int[22,22] { 
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 0},
-		{0, 1, 1, 1, 2, 2, 2, 2, 2, 2, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-		{0, 1, 1, 1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 0, 1, 2, 2, 2, 1, 1, 1, 0},
-		{0, 1, 1, 1, 2, 2, 2, 2, 2, 2, 0, 1, 1, 0, 1, 1, 1, 1, 2, 1, 1, 0},
-		{0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 2, 1, 1, 0},
-		{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 2, 1, 1, 0},
-		{0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0},
-		{0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-		{0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0},
-		{0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0},
-		{0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
-		{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-		{0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-		{0, 1, 1, 1, 1, 2, 0, 1, 1, 1, 1, 1, 0, 2, 2, 2, 2, 1, 1, 1, 1, 0},
-		{0, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 0, 2, 2, 2, 2, 1, 1, 1, 1, 0},
-		{0, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 0, 2, 2, 2, 2, 0, 1, 0, 0, 0},
-		{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 2, 2, 2, 2, 1, 1, 1, 1, 0},
-		{0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 2, 2, 2, 2, 1, 1, 1, 1, 0},
-		{0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-		{0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-	};
+	public uint[,] world;
 
-	float delayMax = 5f;
+	float delaySpeed;
+	float delaySpeedMax = 5f;
+	
+	float delaySafeZone;
+	float delaySafeZoneMax = 10f;
+
+	public static bool thereIsASafeZone;
+	public GameObject speedBonus;
+	public GameObject safeZone;
+
+	public void setWorld(uint[,] value) {
+		world = value;
+	}
 
 	[SerializeField]
-	GameObject SpeedBonus;
-
-	float delay;
+	private bool inGame;
+	
+	public bool GetInGame() {
+		return inGame;
+	}
+	
+	public void setInGame(bool value) {
+		inGame = value;
+	}
 
 	enum bonusType {
 		Speed,
 		Cat,
 		Shovel,
 		Portal,
-		Switch
+		Switch,
+		SafeZone
+	}
+
+	void generateSafeZone() {
+		if (!thereIsASafeZone) {
+			GameObject.Instantiate (safeZone, transform.position + new Vector3 (8, 12, 1), transform.rotation);
+			thereIsASafeZone = true;
+		}
 	}
 
 	void generateBonus() {
-		int i = Random.Range (1, 21);
-		int j = Random.Range (1, 21);
-		if (tileMap[i,j] != 0 && tileMap[i,j] != 2) {
-				GameObject.Instantiate(SpeedBonus, transform.position + new Vector3(i, j, 1), transform.rotation);
+		int i = Random.Range (1, 20);
+		int j = Random.Range (1, 20);
+		if (world[i,j] == 1) {
+			GameObject.Instantiate(speedBonus, transform.position + new Vector3(i, j, 1), transform.rotation);
 		}
 	}
 
 	// Use this for initialization
 	void Start () {
-		delay = 0;
-		generateBonus();
+
+		delaySpeed = 0;
+		delaySafeZone = 0;
+		thereIsASafeZone = false;
+		inGame = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (delay > delayMax) {
-			print ("generatebonnus()");
+		if (delaySpeed > delaySpeedMax && inGame) {
 			generateBonus();
-			delay = 0.0f;
+			delaySpeed = 0.0f;
 		}
-		delay+=Time.deltaTime;
+
+		if (delaySafeZone > delaySafeZoneMax && inGame) {
+			generateSafeZone();
+			delaySafeZone = 0.0f;
+		}
+		delaySafeZone += Time.deltaTime;
+		delaySpeed += Time.deltaTime;
 	}
 }

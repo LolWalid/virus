@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour {
 	static public GameObject[] players = new GameObject[4];
 
 	void init () {
+		((BonusManager) this.GetComponent("BonusManager")).setInGame(true);
+
 		musicSound.audio.Play();
 		playersAlive = 4;
 		textStart = false;
@@ -59,16 +61,14 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	static void infect() {
+	public static void infect() {
 		int i;
-		print ("i will infect someone");
 		do {
-			i = Random.Range (0,3);
+			i = Random.Range (0,4);
 		} while (players[i] == null);
 
 		Player playerScript = (Player) players[i].GetComponent("Player");
 		playerScript.infect(1.0f);
-		print ("i infected" +  playerScript.Id);
 	}
 
 	public static void kill(int i) {
@@ -77,10 +77,9 @@ public class GameManager : MonoBehaviour {
 			Player playerScript = (Player) players[i-1].GetComponent("Player");
 			bool wasInfected = playerScript.IsInfected;
 			Destroy(players[i-1]);
-			if (wasInfected) {
-				print ("i was infected");
+
+			if (wasInfected) 
 				infect();
-			}
 		}
 	}
 
