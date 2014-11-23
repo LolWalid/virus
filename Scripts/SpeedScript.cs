@@ -11,8 +11,8 @@ public class SpeedScript : MonoBehaviour {
 	
 	private int spriteNum = 3;
 	
-	private float nextAnim = 0.0f;
-	public float elapsed = 0.1f;
+	private float timeElapsed = 0.0f;
+	public float animCoolDown = 0.1f;
 	
 	void changeSprite(){
 		sr = (SpriteRenderer)GetComponent ("SpriteRenderer");
@@ -26,8 +26,8 @@ public class SpeedScript : MonoBehaviour {
 		InputController script = (InputController) player.GetComponent("InputController");
 		
 		scale = script.GetScale();
-		if (scale < 0.15f) {
-			script.setScale(scale + 0.02f);
+		if (scale < 0.10f) {
+			script.setScale(scale + 0.015f);
 		}
 		if (!speedSound)
 			speedSound = (GameObject) Instantiate (speedPrefab, new Vector3(0,0,0), transform.rotation);
@@ -42,9 +42,10 @@ public class SpeedScript : MonoBehaviour {
 	}
 	
 	void Update() {
-		if (Time.time > nextAnim ) {
-			nextAnim += elapsed; 
+		if (timeElapsed > animCoolDown ) {
+			timeElapsed = 0f;
 			changeSprite();
 		} 
+		timeElapsed += Time.deltaTime;
 	}
 }

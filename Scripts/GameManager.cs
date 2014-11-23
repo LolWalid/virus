@@ -9,6 +9,14 @@ public class GameManager : MonoBehaviour {
 	public Sprite[] Player3 = new Sprite[2];
 	public Sprite[] Player4 = new Sprite[2];
 
+	public Sprite[] countdownSprites = new Sprite[3];
+	private SpriteRenderer sr;
+
+	[SerializeField]
+	GameObject countdownModel;
+
+	GameObject[] numbers = new GameObject[3];
+
 	public static int playersAlive = 0;
 	bool textStart = true;
 	bool textWin = false;
@@ -21,7 +29,25 @@ public class GameManager : MonoBehaviour {
 	
 	static public GameObject[] players = new GameObject[4];
 
-	void init () {
+
+	private IEnumerator countdown(){
+		for (int i=0; i < 3; i++) {
+			numbers [i] = (GameObject)Instantiate (countdownModel, new Vector3 (0, 0, 0), transform.rotation);
+			sr = (SpriteRenderer) numbers[i].GetComponent("SpriteRenderer");
+			sr.sprite = countdownSprites[i];
+			yield return new WaitForSeconds(1);
+			Destroy(numbers[i]);
+		}
+	}
+	IEnumerator firstInfect(){
+		yield return new WaitForSeconds (5);
+		firstInfect ();
+	}
+
+	IEnumerator init () {
+
+		yield return new WaitForSeconds(3);
+
 		((BonusManager) this.GetComponent("BonusManager")).setInGame(true);
 
 		musicSound.audio.Play();
@@ -113,8 +139,10 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetButtonDown ("Start") && playersAlive <= 1) {
-			init();
-			infect ();
+			StartCoroutine (countdown());
+			StartCoroutine (init());
+			StartCoroutine (firstInfect ());
+			textStart = false;
 		}
 
 		if (playersAlive == 1) {
