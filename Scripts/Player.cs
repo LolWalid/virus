@@ -8,9 +8,12 @@ public class Player : MonoBehaviour {
 	public float timespan = 0.5f;
 	public float time_max = 15.0f;
 	private float time = 0f;
+	private bool notPlayed;
+	public Sprite[] sprites = new Sprite[4];
 
 	public GameObject virusPrefab;
 	static private GameObject virusSound;
+	public GameObject explosion;
 
 	IEnumerator Vibrate(PlayerIndex player, float speed, float timespan, float delay)
 	{
@@ -64,23 +67,46 @@ public class Player : MonoBehaviour {
 		if (!virusSound)
 			virusSound = (GameObject) Instantiate (virusPrefab, new Vector3(0,0,0), transform.rotation);
 	}
-	
+
+
+	void countDown() {
+	}
+
+	IEnumerator explode ()
+	{
+		GameObject explode = new GameObject ();
+		Vector3 position = this.transform.position;
+		SpriteRenderer sr;
+		for (int i = 0; i < 4; i++) {
+			explode = (GameObject) Instantiate (explosion, position, transform.rotation);
+			sr = (SpriteRenderer)explosion.GetComponent ("SpriteRenderer");
+			sr.sprite = sprites[i];
+			yield return new WaitForSeconds (0.15f);
+			Destroy (explode, 0.15f);
+		}
+		Destroy (this.gameObject);
+		
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if (isInfected)
 		{
-			transform.localScale = new Vector3(0.8f,0.8f,1.0f);
 			time += Time.deltaTime;
 		}
 		else 
 		{
-			transform.localScale = new Vector3(0.5f,0.5f,1.0f);
 			time = 0f;
 		}
 		if (time > time_max)
 		{
 			virusSound.audio.Play();
+		//	StartCoroutine(explode ());
 			GameManager.kill (id);
+		}
+		if (time < 5.0f && notPlayed) {
+			notPlayed = true;
+			countDown();
 		}
 	}
 }

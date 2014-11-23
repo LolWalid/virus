@@ -9,13 +9,14 @@ public class GameManager : MonoBehaviour {
 	public Sprite[] Player3 = new Sprite[2];
 	public Sprite[] Player4 = new Sprite[2];
 
-	public Sprite[] countdownSprites = new Sprite[3];
+	public Sprite[] countdownSprites = new Sprite[5];
 	private SpriteRenderer sr;
 
 	[SerializeField]
 	GameObject countdownModel;
 
 	GameObject[] numbers = new GameObject[3];
+	static int[] dead = new int[4];
 
 	public static int playersAlive = 0;
 	public GameObject prefabStart;
@@ -25,7 +26,9 @@ public class GameManager : MonoBehaviour {
 	int winner = 0;
 
 	public GameObject musicSound;
-	
+	public GameObject menuSound;
+	public GameObject startSound;
+
 	[SerializeField]
 	GameObject playerModel;
 	
@@ -33,6 +36,7 @@ public class GameManager : MonoBehaviour {
 
 
 	private IEnumerator countdown(){
+		startSound.audio.Play();
 		for (int i=0; i < 3; i++) {
 			numbers [i] = (GameObject)Instantiate (countdownModel, new Vector3 (0, 0, 0), transform.rotation);
 			sr = (SpriteRenderer) numbers[i].GetComponent("SpriteRenderer");
@@ -41,12 +45,25 @@ public class GameManager : MonoBehaviour {
 			Destroy(numbers[i]);
 		}
 	}
+
+	private IEnumerator countdownFinal(){
+		startSound.audio.Play();
+		for (int i=0; i < 5; i++) {
+			numbers [i] = (GameObject)Instantiate (countdownModel, new Vector3 (0, 0, 0), transform.rotation);
+			sr = (SpriteRenderer) numbers[i].GetComponent("SpriteRenderer");
+			sr.sprite = countdownSprites[i];
+			yield return new WaitForSeconds(1);
+			Destroy(numbers[i]);
+		}
+	}
+
 	IEnumerator firstInfect(){
 		yield return new WaitForSeconds (5);
 		infect();
 	}
 
 	IEnumerator init () {
+
 
 		yield return new WaitForSeconds(3);
 
@@ -60,6 +77,7 @@ public class GameManager : MonoBehaviour {
 		for (int i=0; i < 4; i++) {
 			if (players[i] != null)
 				Destroy(players[i]);
+			dead[i] = -1;
 
 			players[i] = (GameObject) Instantiate (playerModel, new Vector3(i-1,i+1,0), transform.rotation);
 			
@@ -103,9 +121,30 @@ public class GameManager : MonoBehaviour {
 			bool wasInfected = playerScript.IsInfected;
 			Destroy(players[i-1]);
 
+			dead[4 - playersAlive - 1] = i;
+
 			if (wasInfected) 
-				infect();
+				infectAfterKill();
 		}
+	}
+
+	static bool isDead(int id) {
+		for (int k = 0; k < 4 ;k++) {
+			if (id == dead[k])
+				return false;
+		}
+		return true;
+	}
+
+	static void infectAfterKill() {
+		int i;
+		do {
+			i = Random.Range (0,4);
+		} while (isDead(i));
+
+		print (i);
+		Player playerScript = (Player) players[i].GetComponent("Player");
+		playerScript.infect(1.0f);
 	}
 
 	void OnGUI () {
@@ -139,7 +178,11 @@ public class GameManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		if (playersAlive == 0 && !menuSound.audio.isPlaying)
+			menuSound.audio.Play();
+
 		if (Input.GetButtonDown ("Start") && playersAlive <= 1) {
+			menuSound.audio.Stop ();
 			playersAlive = 4;
 			textWin = false;
 			Destroy(textStart.gameObject);
@@ -150,6 +193,7 @@ public class GameManager : MonoBehaviour {
 
 		if (playersAlive == 1 && !textStart) {
 			textStart = (GameObject) Instantiate (prefabStart, new Vector3(0,0,1), transform.rotation);
+			playersAlive = 0;
 			for (int i=0; i<players.Length; i++) {
 				if (players[i] != null) {
 					winner = i + 1;
