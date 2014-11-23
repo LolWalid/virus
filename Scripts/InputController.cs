@@ -96,7 +96,7 @@ public class InputController : MonoBehaviour
 		if (Speed != new Vector3(0,1,0) * scale)
 			sr.sprite = normal;
 		
-		mode = Commands.HtoV;
+		mode = Commands.FullInvert;
 		inputH = Input.GetAxis (axisH);
 		inputV = Input.GetAxis (axisV);
 		coeffH = 1;
@@ -105,7 +105,6 @@ public class InputController : MonoBehaviour
 		if (isInfected) {
 			switch (mode) {
 			case Commands.FullInvert:
-				Debug.Log ("FullInvert");
 				coeffH = -1;
 				coeffV = -1;
 				break;
@@ -173,5 +172,18 @@ public class InputController : MonoBehaviour
 			}
 		}
 		transform.position += Speed;
+
+		if (transform.position.x > 11.0f)
+			transform.position = new Vector3(10.0f, transform.position.y,1.0f);
+
+		if (transform.position.x < -10.0f)
+			transform.position = new Vector3(-9.0f, transform.position.y,1.0f);
+
+		if (transform.position.y > 11.0f)
+			transform.position = new Vector3(transform.position.x, 10.0f,1.0f);
+		
+		if (transform.position.y < -10.0f)
+			transform.position = new Vector3(transform.position.x, -9.0f,1.0f);
+
 	}
 }

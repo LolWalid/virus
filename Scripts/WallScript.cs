@@ -10,7 +10,7 @@ public class WallScript : MonoBehaviour {
 		if (collid.gameObject.tag == "Player") {
 			InputController script2 = (InputController) collid.GetComponent("InputController");
 			
-			Vector3 v2 = -1 * script2.GetSpeed();
+			Vector3 v2 = -0.4f * script2.GetSpeed();
 			collid.transform.position  += v2;
 
 			script2.SetSpeed(v2);

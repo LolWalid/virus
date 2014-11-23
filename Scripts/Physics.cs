@@ -14,11 +14,11 @@ public class Physics : MonoBehaviour {
 			InputController script2 = (InputController) collid.GetComponent("InputController");
 			Player player2 = (Player) collid.GetComponent("Player");
 
-			Vector3 v = -1 *  script.GetSpeed() ;
+			Vector3 v = -0.8f *  script.GetSpeed() ;
 			this.transform.position  += v;
 			script.SetSpeed(v);
 
-			Vector3 v2 = -1 * script2.GetSpeed();
+			Vector3 v2 = -0.8f * script2.GetSpeed();
 			collid.transform.position  += v2;
 			script2.SetSpeed(v2);
 

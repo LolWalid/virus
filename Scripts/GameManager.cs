@@ -19,10 +19,7 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	GameObject playerModel;
 	
-	GameObject[] players = new GameObject[4];
-
-	
-	// Use this for initialization
+	static public GameObject[] players = new GameObject[4];
 
 	void init () {
 		musicSound.audio.Play();
@@ -34,6 +31,9 @@ public class GameManager : MonoBehaviour {
 		Player playerScript;
 
 		for (int i=0; i < 4; i++) {
+			if (players[i] != null)
+				Destroy(players[i]);
+
 			players[i] = (GameObject) Instantiate (playerModel, new Vector3(i-1,i+1,0), transform.rotation);
 			
 			script = (InputController) players[i].GetComponent("InputController");
@@ -54,17 +54,34 @@ public class GameManager : MonoBehaviour {
 				script.back = Player4[0];
 				script.normal = Player4[1];
 			}
-
 			playerScript.Id = i+1;
 			script.initAxis(i+1);
 		}
-
 	}
 
-	void infect(int i) {
-		Player playerScript = (Player) players[i].GetComponent("Player");
-		playerScript.infect(i+1);
+	static void infect() {
+		int i;
+		print ("i will infect someone");
+		do {
+			i = Random.Range (0,3);
+		} while (players[i] == null);
 
+		Player playerScript = (Player) players[i].GetComponent("Player");
+		playerScript.infect(1.0f);
+		print ("i infected" +  playerScript.Id);
+	}
+
+	public static void kill(int i) {
+	if (players[i-1] != null) {
+			playersAlive-=1;
+			Player playerScript = (Player) players[i-1].GetComponent("Player");
+			bool wasInfected = playerScript.IsInfected;
+			Destroy(players[i-1]);
+			if (wasInfected) {
+				print ("i was infected");
+				infect();
+			}
+		}
 	}
 
 	void OnGUI () {
@@ -79,17 +96,28 @@ public class GameManager : MonoBehaviour {
 
 
 	void Start () {
-		musicSound.audio.loop = false;
-	
+		musicSound.audio.loop = true;
 	}
+
+	bool check() {
+		for (int i=0;i<players.Length;i++) {
+			if (players[i] != null) {
+				Player playerScript = (Player) players[i].GetComponent("Player");
+				if (playerScript.IsInfected) 
+					return false;
+			}
+		}
+		return true;
+	}	
+
 
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetButtonDown ("Start") && playersAlive <= 1) {
 			init();
-			infect (0);
+			infect ();
 		}
-		
+
 		if (playersAlive == 1) {
 			for (int i=0; i<players.Length; i++) {
 				if (players[i] != null) {

@@ -74,8 +74,7 @@ public class Player : MonoBehaviour {
 		}
 		if (time > time_max)
 		{
-			GameManager.playersAlive -= 1;
-			kill(this.gameObject);
+			GameManager.kill (id);
 		}
 	}
 }
