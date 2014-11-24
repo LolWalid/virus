@@ -9,6 +9,7 @@ public class Player : MonoBehaviour {
 	private float time_max = 3.0f;
 	private float time = 0f;
 	private bool notPlayed;
+	private bool dead = false;
 	public Sprite[] sprites = new Sprite[4];
 	
 	public GameObject virusPrefab;
@@ -72,24 +73,41 @@ public class Player : MonoBehaviour {
 	void countDown() {
 	}
 
-	IEnumerator explode ()
-	{
+//	IEnumerator explode ()
+//	{
+//		GameObject explode;
+//		Vector3 position = this.transform.position;
+//		SpriteRenderer sr;
+//		explode = (GameObject) Instantiate (explosion, position, transform.rotation);
+//		sr = (SpriteRenderer) explosion.GetComponent ("SpriteRenderer");
+//
+//		for (int i = 0; i < 4; i++) {
+//			yield return new WaitForSeconds (0.1f);
+//			sr.sprite = sprites[i];
+//		}
+//
+//		Destroy (explode.gameObject);
+//		GameManager.kill (id);
+//	}
+
+	private IEnumerator explode(){
 		GameObject explode;
 		Vector3 position = this.transform.position;
 		SpriteRenderer sr;
-		explode = (GameObject) Instantiate (explosion, position, transform.rotation);
-		sr = (SpriteRenderer) explosion.GetComponent ("SpriteRenderer");
 
-		for (int i = 0; i < 4; i++) {
-			yield return new WaitForSeconds (0.4f);
+		for (int i=0; i < 4; i++) {
+			explode = (GameObject) Instantiate (explosion, position, transform.rotation);
+			sr = (SpriteRenderer) explosion.GetComponent ("SpriteRenderer");
 			sr.sprite = sprites[i];
+			yield return new WaitForSeconds(0.1f);
+			Destroy(explode);
 		}
 
-		yield return new WaitForSeconds (0.8f);
-		Destroy (explode.gameObject);
-		//GameManager.kill (id);
+		yield return new WaitForSeconds(1);
+		GameManager.kill (id);
 	}
 
+	
 	// Update is called once per frame
 	void Update () {
 		if (isInfected)
@@ -102,12 +120,18 @@ public class Player : MonoBehaviour {
 			transform.localScale = new Vector3(0.5f,0.5f,1f);
 			time = 0f;
 		}
+
 		if (time > time_max)
 		{
-			transform.localScale = new Vector3(0f,0f,1f);
+			dead = true;
+			time = 0;
 			virusSound.audio.Play();
 			StartCoroutine(explode ());
 		}
+
+		if (dead)
+			transform.localScale = new Vector3(0.0f,0.0f,0f);
+
 		if ((time_max - time) < 5.0f && notPlayed) {
 			notPlayed = true;
 			countDown();

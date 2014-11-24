@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	IEnumerator firstInfect(){
-		yield return new WaitForSeconds (2);
+		yield return new WaitForSeconds (5);
 		infect();
 	}
 
