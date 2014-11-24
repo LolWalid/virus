@@ -51,7 +51,7 @@ public class BonusManager : MonoBehaviour {
 		int i = Random.Range (1, 21);
 		int j = Random.Range (1, 21);
 		if (world[i,j] != 0 && world[i,j] != 2 && i != 8 && j != 12) {
-			if (Random.Range (41,43) == 42) {
+			if (Random.Range (0,43) == 0) {
 				GameObject.Instantiate(catBonus, transform.position + new Vector3(i,j,1), transform.rotation);
 			}
 			else {

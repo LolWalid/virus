@@ -4,13 +4,13 @@ using XInputDotNetPure;
 
 public class Player : MonoBehaviour {
 	public float speed = 0.4f;
-	private PlayerIndex player;
+	public PlayerIndex player;
 	public float timespan = 0.5f;
-	public float time_max = 15.0f;
+	private float time_max = 3.0f;
 	private float time = 0f;
 	private bool notPlayed;
 	public Sprite[] sprites = new Sprite[4];
-
+	
 	public GameObject virusPrefab;
 	static private GameObject virusSound;
 	public GameObject explosion;
@@ -49,7 +49,7 @@ public class Player : MonoBehaviour {
 
 
 	public void infect(float delay) {
-		player = (PlayerIndex) id - 1;
+		player = (PlayerIndex) id;
 		isInfected = true;
 		StartCoroutine(Vibrate (player, speed, timespan,delay));
 	}
@@ -74,37 +74,41 @@ public class Player : MonoBehaviour {
 
 	IEnumerator explode ()
 	{
-		GameObject explode = new GameObject ();
+		GameObject explode;
 		Vector3 position = this.transform.position;
 		SpriteRenderer sr;
+		explode = (GameObject) Instantiate (explosion, position, transform.rotation);
+		sr = (SpriteRenderer) explosion.GetComponent ("SpriteRenderer");
+
 		for (int i = 0; i < 4; i++) {
-			explode = (GameObject) Instantiate (explosion, position, transform.rotation);
-			sr = (SpriteRenderer)explosion.GetComponent ("SpriteRenderer");
+			yield return new WaitForSeconds (0.4f);
 			sr.sprite = sprites[i];
-			yield return new WaitForSeconds (0.15f);
-			Destroy (explode, 0.15f);
 		}
-		Destroy (this.gameObject);
-		
+
+		yield return new WaitForSeconds (0.8f);
+		Destroy (explode.gameObject);
+		//GameManager.kill (id);
 	}
 
 	// Update is called once per frame
 	void Update () {
 		if (isInfected)
-		{
+		{	
+			transform.localScale = new Vector3(0.8f,0.8f,1f);
 			time += Time.deltaTime;
 		}
 		else 
 		{
+			transform.localScale = new Vector3(0.5f,0.5f,1f);
 			time = 0f;
 		}
 		if (time > time_max)
 		{
+			transform.localScale = new Vector3(0f,0f,1f);
 			virusSound.audio.Play();
-		//	StartCoroutine(explode ());
-			GameManager.kill (id);
+			StartCoroutine(explode ());
 		}
-		if (time < 5.0f && notPlayed) {
+		if ((time_max - time) < 5.0f && notPlayed) {
 			notPlayed = true;
 			countDown();
 		}

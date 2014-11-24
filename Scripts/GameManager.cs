@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using XInputDotNetPure;
 
 public class GameManager : MonoBehaviour {
 	
@@ -16,7 +17,6 @@ public class GameManager : MonoBehaviour {
 	GameObject countdownModel;
 
 	GameObject[] numbers = new GameObject[3];
-	static int[] dead = new int[4];
 
 	public static int playersAlive = 0;
 	public GameObject prefabStart;
@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	IEnumerator firstInfect(){
-		yield return new WaitForSeconds (5);
+		yield return new WaitForSeconds (2);
 		infect();
 	}
 
@@ -77,7 +77,6 @@ public class GameManager : MonoBehaviour {
 		for (int i=0; i < 4; i++) {
 			if (players[i] != null)
 				Destroy(players[i]);
-			dead[i] = -1;
 
 			players[i] = (GameObject) Instantiate (playerModel, new Vector3(i-1,i+1,0), transform.rotation);
 			
@@ -99,8 +98,8 @@ public class GameManager : MonoBehaviour {
 				script.back = Player4[0];
 				script.normal = Player4[1];
 			}
-			playerScript.Id = i+1;
-			script.initAxis(i+1);
+			playerScript.Id = i;
+			script.initAxis(i);
 		}
 	}
 
@@ -115,34 +114,25 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public static void kill(int i) {
-	if (players[i-1] != null) {
+	if (players[i] != null) {
 			playersAlive-=1;
-			Player playerScript = (Player) players[i-1].GetComponent("Player");
+			Player playerScript = (Player) players[i].GetComponent("Player");
 			bool wasInfected = playerScript.IsInfected;
-			Destroy(players[i-1]);
+			Destroy(players[i]);
 
-			dead[4 - playersAlive - 1] = i;
-
-			if (wasInfected) 
-				infectAfterKill();
+			if (wasInfected && playersAlive > 1) 
+				infectAfterKill(i);
 		}
 	}
 
-	static bool isDead(int id) {
-		for (int k = 0; k < 4 ;k++) {
-			if (id == dead[k])
-				return false;
-		}
-		return true;
-	}
-
-	static void infectAfterKill() {
+	static void infectAfterKill(int id) {
 		int i;
 		do {
 			i = Random.Range (0,4);
-		} while (isDead(i));
+		} while (id == i || players[i] == null);
 
-		print (i);
+		//print ("Le joueur " + id + " est mort infecté.");
+		//print ("Le joueur " + i + " a été infecté.");
 		Player playerScript = (Player) players[i].GetComponent("Player");
 		playerScript.infect(1.0f);
 	}

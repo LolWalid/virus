@@ -82,7 +82,7 @@ public class InputController : MonoBehaviour
 	{
 		player = (Player)this.GetComponent ("Player");
 		Speed = new Vector3 (0, 0, 0);
-		scale = 0.03f;
+		scale = 0.02f;
 		threshold = 0.9f;
 		sr = (SpriteRenderer) GetComponent("SpriteRenderer");
 		sr.sprite = normal;
@@ -97,8 +97,14 @@ public class InputController : MonoBehaviour
 			sr.sprite = normal;
 		
 		mode = Commands.FullInvert;
+
 		inputH = Input.GetAxis (axisH);
-		inputV = Input.GetAxis (axisV);
+
+
+		inputV = Input.GetAxis(axisV);
+		if ( Mathf.Abs( inputH )== 1 )
+			inputV = 0;
+
 		coeffH = 1;
 		coeffV = 1;
 
@@ -154,7 +160,7 @@ public class InputController : MonoBehaviour
 			}
 		}
 		if (Mathf.Abs (inputH) == 1 || Mathf.Abs (inputV) == 1) {
-			if (Mathf.Abs (inputH) > Mathf.Abs (inputV)) {
+			if (Mathf.Abs (inputH) >= Mathf.Abs (inputV)) {
 				if (inputH < 0)
 					prevInput = Direction.Left;
 				if (inputH > 0)
@@ -171,6 +177,9 @@ public class InputController : MonoBehaviour
 				Speed = new Vector3 (0, coeffV * inputV, 0) * scale;
 			}
 		}
+		inputH = 0;
+		inputV = 0;
+
 		transform.position += Speed;
 
 		if (transform.position.x > 11.0f)
