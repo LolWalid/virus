@@ -6,7 +6,7 @@ public class Player : MonoBehaviour {
 	public float speed = 0.4f;
 	public PlayerIndex player;
 	public float timespan = 0.5f;
-	private float time_max = 3.0f;
+	private float time_max = 15.0f;
 	private float time = 0f;
 	private bool notPlayed;
 	private bool dead = false;
@@ -50,7 +50,7 @@ public class Player : MonoBehaviour {
 
 
 	public void infect(float delay) {
-		player = (PlayerIndex) id;
+		player = (PlayerIndex) id + 1;
 		isInfected = true;
 		StartCoroutine(Vibrate (player, speed, timespan,delay));
 	}

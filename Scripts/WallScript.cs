@@ -11,9 +11,11 @@ public class WallScript : MonoBehaviour {
 			InputController script2 = (InputController) collid.GetComponent("InputController");
 			
 			Vector3 v2 = -0.4f * script2.GetSpeed();
-			collid.transform.position  += v2;
+			Vector3 v3 = -2.0f * script2.GetSpeed();
+			collid.transform.position -= script2.GetSpeed() / Time.deltaTime;
 
 			script2.SetSpeed(v2);
+
 			if (!realSound)
 				realSound = (GameObject) Instantiate (sound, new Vector3(0,0,0), transform.rotation);
 			realSound.audio.Play();

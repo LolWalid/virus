@@ -6,7 +6,7 @@ public class BonusManager : MonoBehaviour {
 	public uint[,] world;
 
 	float delaySpeed;
-	float delaySpeedMax = 5f;
+	float delaySpeedMax = 2.0f;
 	
 	float delaySafeZone;
 	float delaySafeZoneMax = 10f;

@@ -180,6 +180,9 @@ public class GameManager : MonoBehaviour {
 			StartCoroutine (init());
 			StartCoroutine (firstInfect ());
 		}
+		if (Input.GetButtonDown ("Quit")) {
+			Application.Quit();
+		}
 
 		if (playersAlive == 1 && !textStart) {
 			textStart = (GameObject) Instantiate (prefabStart, new Vector3(0,0,1), transform.rotation);
