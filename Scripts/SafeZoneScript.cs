@@ -32,6 +32,5 @@ public class SafeZoneScript : MonoBehaviour {
 	}
 	
 	void Update() {
-		
 	}
 }

@@ -5,6 +5,8 @@ public class SpeedScript : MonoBehaviour {
 	float scale;
 	public GameObject speedPrefab;
 	static private GameObject speedSound;
+	private float time = 0.0f;
+	private float tMax = 5.0f;
 	
 	public Sprite[] sprites = new Sprite[4];
 	private SpriteRenderer sr;
@@ -47,5 +49,9 @@ public class SpeedScript : MonoBehaviour {
 			changeSprite();
 		} 
 		timeElapsed += Time.deltaTime;
+		time += Time.deltaTime;
+		
+		if (time > tMax)
+			Destroy(this.gameObject);
 	}
 }
